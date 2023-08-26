@@ -8,7 +8,9 @@ import useScrollTrigger from "@mui/material/useScrollTrigger";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Slide from "@mui/material/Slide";
-
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
+import Logo from "../../img/logo.png";
 function HideOnScroll(props) {
   const { children, window } = props;
   // Note that you normally won't need to set the window ref as useScrollTrigger
@@ -38,17 +40,32 @@ const Header = () => {
     <React.Fragment>
       <CssBaseline />
       <HideOnScroll>
-        <AppBar>
+        <AppBar style={{ backgroundColor: "rgba(255, 235, 59, 0.7)" }}>
           <Toolbar>
-            <Typography variant="h6" component="div" className="font-1">
-              竹崎玉旨慈后宮
-            </Typography>
+            <Stack direction="row" spacing={1} sx={{ width: "100%" }}>
+              <img
+                src={Logo}
+                alt={"竹崎玉旨慈后宮"}
+                loading="lazy"
+                style={{
+                  maxWidth: "80%",
+                  height: "100%",
+                  margin: "auto",
+                  maxHeight: "60px",
+                }}
+              />
+              {/* put the button on the right side
+               */}
+            </Stack>
           </Toolbar>
         </AppBar>
       </HideOnScroll>
       <Toolbar />
       <Container>
-        <Box sx={{ my: 2 }}>{"請大家慢慢選擇，謝謝"}</Box>
+        {/* <Typography variant="h4" component="h4" sx={{ my: 2 }}>
+          {"收驚時間及報名"}
+        </Typography> */}
+        <Divider sx={{ my: 2 }}>收驚時間</Divider>
       </Container>
     </React.Fragment>
   );
