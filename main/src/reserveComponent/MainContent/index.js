@@ -13,8 +13,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import Input from "@mui/material/Input";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
 import { ref, onValue, update, set } from "firebase/database";
 import { db } from "../../firebase/firebase";
@@ -23,11 +23,12 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 const MainContent = () => {
   const [expanded, setExpanded] = React.useState(false);
   const [events, setEvents] = React.useState([]);
+  const [loadDate, setLoadDate] = React.useState(false);
 
   React.useEffect(() => {
     // 使用 Firebase 來讀取 "events" 路徑的資料
     const eventsRef = ref(db, "events");
-
+    setLoadDate(true);
     const unsubscribe = onValue(eventsRef, (snapshot) => {
       // 將讀取到的資料轉換為陣列並設定到狀態中
 
@@ -45,6 +46,7 @@ const MainContent = () => {
         eventArrayTenTimes.push(...eventArray);
       } */
       setEvents(eventArray);
+      setLoadDate(false);
     });
 
     // 記得在組件解除掛載時解除事件監聽
@@ -68,6 +70,12 @@ const MainContent = () => {
           data={event}
         />
       ))}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loadDate}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 };
@@ -119,21 +127,24 @@ const AccordionItem = ({ expanded, handleChange, idx, data }) => {
         aria-controls={`panel${idx}bh-content`}
         id={`panel${idx}bh-header`}
       >
-        <Typography sx={{ width: "87%", flexShrink: 0 }}>
-          {/*show date(data.startTime is 2011-11-11T11:00:00) , slice the string before "T*/}
-          {date}
-          <KeyboardDoubleArrowRightIcon
-            fontSize="small"
-            style={{
-              position: "relative",
-              top: "5px",
-            }}
-          />
-          {time.startTime}~{time.endTime}
-        </Typography>
-        <Typography color="text.secondary">
-          {data.people ? data.people.length : 0}/{data.limitNum}
-        </Typography>
+        <Stack direction="row" spacing={2}>
+          <Typography sx={{ flexShrink: 0 }}>
+            {/*show date(data.startTime is 2011-11-11T11:00:00) , slice the string before "T*/}
+            {date}
+            <KeyboardDoubleArrowRightIcon
+              fontSize="small"
+              style={{
+                position: "relative",
+                top: "5px",
+              }}
+            />
+            {time.startTime}~{time.endTime}
+          </Typography>
+
+          <Typography color="text.secondary">
+            {data.people ? data.people.length : 0}/{data.limitNum}
+          </Typography>
+        </Stack>
       </AccordionSummary>
       <AccordionDetails>
         <Typography>

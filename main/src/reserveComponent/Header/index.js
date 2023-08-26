@@ -11,6 +11,9 @@ import Slide from "@mui/material/Slide";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Logo from "../../img/logo.png";
+import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase/firebase.js";
 function HideOnScroll(props) {
   const { children, window } = props;
   // Note that you normally won't need to set the window ref as useScrollTrigger
@@ -36,6 +39,7 @@ HideOnScroll.propTypes = {
   window: PropTypes.func,
 };
 const Header = () => {
+  const navigate = useNavigate();
   return (
     <React.Fragment>
       <CssBaseline />
@@ -52,6 +56,10 @@ const Header = () => {
                   height: "100%",
                   margin: "auto",
                   maxHeight: "60px",
+                }}
+                onClick={() => {
+                  signOut(auth);
+                  navigate("/login");
                 }}
               />
               {/* put the button on the right side

@@ -143,6 +143,9 @@ const Header = () => {
                   margin: "auto",
                   maxHeight: "60px",
                 }}
+                onClick={() => {
+                  navigate("/");
+                }}
               />
               {/* put the button on the right side
                */}

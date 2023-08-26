@@ -33,6 +33,7 @@ import {
 } from "firebase/database";
 import { db } from "../../firebase/firebase";
 import Logo from "../../img/logo.png";
+import { useNavigate } from "react-router-dom";
 function HideOnScroll(props) {
   const { children, window } = props;
   // Note that you normally won't need to set the window ref as useScrollTrigger
@@ -58,6 +59,7 @@ HideOnScroll.propTypes = {
   window: PropTypes.func,
 };
 const Header = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const handleClear = async () => {
