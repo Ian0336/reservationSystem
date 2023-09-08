@@ -22,10 +22,11 @@ import ListItemText from "@mui/material/ListItemText";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Switch from "@mui/material/Switch";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
 import { ref, onValue, remove, update, get, set } from "firebase/database";
 import { db } from "../../firebase/firebase";
 import { render } from "@testing-library/react";
-
 const MainContent = () => {
   const [expanded, setExpanded] = React.useState(false);
   const [events, setEvents] = React.useState([]);
@@ -115,14 +116,23 @@ const AccordionItem = ({ expanded, handleChange, idx, data }) => {
     <Accordion
       expanded={expanded === `panel${idx}`}
       onChange={handleChange(`panel${idx}`)}
+      style={{
+        marginBottom: "6px",
+      }}
     >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls={`panel${idx}bh-content`}
         id={`panel${idx}bh-header`}
       >
-        <Stack direction="row" spacing={2} sx={{ width: "100%" }}>
-          <Typography sx={{ flexShrink: 0 }}>
+        <Grid
+          container
+          /* spacing={{ xs: 0, sm: 5 }} */
+
+          style={{ width: "100%", fontWeight: "bold" }}
+          justifyContent="space-between"
+        >
+          <Grid item>
             {/*show date(data.startTime is 2011-11-11T11:00:00) , slice the string before "T*/}
             {date}
             <KeyboardDoubleArrowRightIcon
@@ -133,12 +143,12 @@ const AccordionItem = ({ expanded, handleChange, idx, data }) => {
               }}
             />
             {time.startTime}~{time.endTime}
-          </Typography>
+          </Grid>
 
-          <Typography color="text.secondary" style={{ marginRight: "auto" }}>
+          <Grid item sx={{ marginLeft: "auto" }} color="text.secondary">
             {data.people ? data.people.length : 0}/{data.limitNum}
-          </Typography>
-        </Stack>
+          </Grid>
+        </Grid>
       </AccordionSummary>
       <AccordionDetails>
         <Typography>
@@ -266,6 +276,7 @@ const EditModel = ({ open, setOpen, data }) => {
   const [duringHour, setDuringHour] = React.useState(0);
   const [limitNum, setLimitNum] = React.useState(0);
   const [people, setPeople] = React.useState([]);
+  const [name, setName] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
     if (data) {
@@ -285,6 +296,7 @@ const EditModel = ({ open, setOpen, data }) => {
 
   const handleEditEvent = async () => {
     setLoading(true);
+
     /* people in newEvent include those people are able */
     const newEvent = {
       startTime: startTime,
@@ -294,7 +306,14 @@ const EditModel = ({ open, setOpen, data }) => {
         .filter((person) => person.able)
         .map((person) => person.name),
     };
-
+    /* 將newEvent裡面的people再加上name中的所有名字 */
+    const nameArray = name.split("。");
+    nameArray.forEach((name) => {
+      if (name.length > 0) {
+        newEvent.people.push(name);
+      }
+    });
+    setName("");
     const eventsRef = ref(db, "events/" + data.key + "/");
     await update(eventsRef, newEvent)
       .then(() => {
@@ -374,7 +393,19 @@ const EditModel = ({ open, setOpen, data }) => {
                 <option value={idx + 1}>{idx + 1}</option>
               ))}
             </NativeSelect>
-
+            <InputLabel htmlFor="input-with-icon-adornment">
+              * 若想要一次輸入多個名字請用句號(。)隔開
+            </InputLabel>
+            <TextField
+              id="outlined-basic"
+              label="輸入姓名"
+              variant="outlined"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              sx={{ my: 2 }}
+              style={inputFieldStyle}
+              inputProps={ariaLabel}
+            />
             <List>
               {people.map((person, idx) => (
                 <ListItem>

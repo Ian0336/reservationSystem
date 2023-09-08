@@ -26,23 +26,24 @@ const Footer = () => {
           </Typography>
 
           <ul>
-            facebook:
+            Facebook:
             <Link
               href="https://www.facebook.com/profile.php?id=100093639774792"
               variant="subtitle1"
-              color="text.secondary"
+              color="blue"
               underline="none"
             >
+              {" "}
               竹崎玉旨慈后宮
             </Link>
           </ul>
           <ul>
-            地址 :
+            地址: {"  "}
             <Link
-              href="#"
               variant="subtitle1"
-              color="text.secondary"
+              color="blue"
               underline="none"
+              component="button"
               onClick={() => {
                 window.scrollTo({
                   top: document.documentElement.scrollHeight,
@@ -50,9 +51,9 @@ const Footer = () => {
                 });
               }}
             >
+              {"  "}
               嘉義縣竹崎鄉和平村田寮95-1號
             </Link>
-            <br></br>（旁邊為小竹崎牛排）
           </ul>
         </Grid>
       </Grid>
